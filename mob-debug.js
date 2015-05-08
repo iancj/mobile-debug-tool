@@ -198,6 +198,8 @@
 		switch(type){
 			case "[object string]":return obj;break;
 			case "[object array]":
+			case "[object number]":
+			case "[object boolean]":
 			case "[object object]":return JSON.stringify(obj);break;
 		}
 	}

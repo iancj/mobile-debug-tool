@@ -24,6 +24,8 @@ MobDebug.start();
 
 > console.info
 
+> tool's animations
+
 > ~~ console.error~~
 
 > ~~ 执行命令~~

@@ -5,6 +5,9 @@
 ul, li {
   list-style: none; }
 
+input, button {
+  -webkit-appearance: none; }
+
 .bdbox {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -51,11 +54,12 @@ ul, li {
 
 #mobDebug-command {
   width: 100%;
-  height: 36px;
+  height: 50px;
   padding: 2px 8px;
   border: 1px solid #000;
-  border-width: 1px 0 0;
-  outline: none; }
+  border-width: 1px 0;
+  outline: none;
+  border-radius: 0; }
 
 #mobDebug-show {
   position: fixed;
