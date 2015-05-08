@@ -1,19 +1,29 @@
+/*
+ * mob-debug.js
+ * by iancj 2015-05-07
+ * https://github.com/iancj/mobile-debug-tool
+ * mobile web console debug tool
+**/
+
 ;(function(window,document){
 	var MobDebug={};
+
 	MobDebug.version="1.0.0";
+
 	MobDebug.cssUrl="mob-debug.css";
-	MobDebug._console={};//实现自身的console
+	
+	MobDebug._console=null;
 
-	loadStylesheet(MobDebug.cssUrl);//加载样式
+	loadStylesheet(MobDebug.cssUrl);//load style sheet
 
-	//获取html模板
+	//get template to html
 	Function.prototype.getMultiLine=function(){
 		var str=new String(this);
 		str=str.substring(str.indexOf("/*")+2,str.indexOf("*/"));
 		return str;
 	}
 
-	//重载chrome的console.log
+	//override console
 	console.log = (function() {
     	var log = console.log;
 
@@ -24,32 +34,47 @@
 	            log.apply(console, arguments);
 	        }
 
-	        MobDebug._console.log.apply(this,arguments);
+	        MobDebug._console("log",Array.prototype.slice.call(arguments));
 	    }
 	})();
 
-	//定义模板
+	console.error = (function() {
+    	var error = console.error;
+
+	    return function(exception) {
+	        if (typeof exception.stack !== 'undefined') {
+	            error.call(console, exception.stack);
+	        } else {
+	            error.apply(console, arguments);
+	        }
+
+	        MobDebug._console("error",Array.prototype.slice.call(arguments));
+	    }
+	})();
+
+	//mobdebug template
 	var t=function(){
 		/*<section id="mobDebug" class="hello bdbox">
 			<ul class="ctrl">
-				<li class="j-debug-console">控制台</li>
-				<li class="j-debug-refresh">刷新</li>
-				<li class="j-debug-hide">隐藏</li>
+				<li class="j-debug-console">Console</li>
+				<li class="j-debug-refresh">Refresh</li>
+				<li class="j-debug-hide">Hide</li>
 			</ul>
 		</section>
 
 		<seciton id="mobDebug-console" class="bdbox">
+			<input type="text" id="mobDebug-command" class="bdbox" placeholder="Please enter command line">
 		</seciton>
 		
 		<a href="javascript:;" id="mobDebug-show" style="display:none;"></a>*/
 	}
 
-	//初始化
+	//initialize
 	var init=function(){
 		var $debug=S("#mobDebug"),
 			$debugConsole=S("#mobDebug-console");
 
-		//如果没有debug工具则插入dom
+		//insert debug tool to body
 		if(!$debug.length) {
 			var $wrap=document.createElement("section");
 			$wrap.className="mobDebug-wrap";
@@ -63,54 +88,83 @@
 		var $btn_console=S(".j-debug-console",$debug),
 			$btn_refresh=S(".j-debug-refresh",$debug),
 			$btn_hide=S(".j-debug-hide",$debug),
-			$btn_show=S("#mobDebug-show",$wrap);
+			$btn_show=S("#mobDebug-show",$wrap),
+			$ip_command=S("#mobDebug-command",$debugConsole);
 
-		//刷新
+		//refresh page
 		$btn_refresh.addEventListener("click",function(){
 			window.location.reload();
 		},false);
 
-		//显示控制栏
+		//show the debug tool
 		$btn_show.addEventListener("click",function(){
 			hide.apply($btn_show);
 			show.apply($debug);
 			show.apply($debugConsole);
 		},false);
 
-		//隐藏控制栏
+		//hide the debug tool
 		$btn_hide.addEventListener("click",function(){
 			show.apply($btn_show);
 			hide.apply($debug);
 			hide.apply($debugConsole);
 		},false);
 
-		//显示or隐藏控制台
+		//show or hide the console panel
 		$btn_console.addEventListener("click",function(){
 			var curDisplay=$debugConsole.style.display;
 
 			(curDisplay=="block" || curDisplay=="") ? hide.apply($debugConsole) : show.apply($debugConsole);
 		},false);
 
-		//实现自身的console.log
-		MobDebug._console.log=function(){
-			var logsArr=Array.prototype.slice.call(arguments);
+		//get commmand line and execute
+		$ip_command.addEventListener("keyup",function(e){
+			if(e.which==13){
+				MobDebug.eval(this.value);
+				this.value="";
+			}
+		},false);
+
+		MobDebug._console=function(type,logsArr){
 			var fragment=document.createDocumentFragment();
 
-			logsArr.forEach(function(log){
-				var log=handleObject(log),
+			logsArr.forEach(function(val){
+				var val=handleObject(val),
 					ele=document.createElement("p"),
-					text=document.createTextNode(log);
+					text=document.createTextNode(val);
 
 				ele.appendChild(text);
-				ele.className="info";
+				ele.className="info info-"+type.toString().toLowerCase();
 				fragment.appendChild(ele);
 			});
 
-			$debugConsole.appendChild(fragment);
+			$debugConsole.insertBefore(fragment,$ip_command);
+		}
+
+		MobDebug.eval=function(command){
+			var text;
+	        var error;
+	        try {
+	            text = window.eval(command);
+	        } catch (e) {
+	            text = e.message;
+	            error = true;
+	        }
+	        if (JSON && JSON.stringify) {
+	            try {
+	                text = JSON.stringify(text);
+	            } catch (e) {
+	                text = e.message;
+	                error = true;
+	            }
+	        }
+	        
+	        if(error) console.error(text)
 		}
 	};
 
-	//简单选择器
+
+	//simple selector
 	function S(selector,parentsNode){
 		parentsNode ? parentsNode=parentsNode : parentsNode=document;
 		var ele=parentsNode.querySelectorAll(selector);
@@ -118,17 +172,17 @@
 		return ele;
 	}
 
-	//显示
+	//show element
 	function show(){
 		this.style.display="block";
 	}
 
-	//隐藏
+	//hide element
 	function hide(){
 		this.style.display="none";
 	}
 
-	//加载样式
+	//load style sheet
 	function loadStylesheet(url){
 		var sheet=document.createElement("link");
 		sheet.rel="stylesheet";
@@ -137,7 +191,7 @@
 		document.head.appendChild(sheet);
 	}
 
-	//处理自身输出对象的格式
+	//object to string handler
 	function handleObject(obj){
 		var type=Object.prototype.toString.call(obj).toLowerCase();
 
@@ -148,6 +202,7 @@
 		}
 	}
 
+	//exports
 	MobDebug.start=init;
 
 	// CommonJS

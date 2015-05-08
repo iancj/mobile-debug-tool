@@ -46,6 +46,16 @@ ul, li {
     line-height: 1.6em;
     padding: 5px;
     border-bottom: 1px solid #E6E6E6; }
+  #mobDebug-console .info-error {
+    color: red; }
+
+#mobDebug-command {
+  width: 100%;
+  height: 36px;
+  padding: 2px 8px;
+  border: 1px solid #000;
+  border-width: 1px 0 0;
+  outline: none; }
 
 #mobDebug-show {
   position: fixed;

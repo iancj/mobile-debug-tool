@@ -1014,16 +1014,18 @@ body .markdown-body
     page-break-after: avoid;
   }
 }
-</style><title>readme</title></head><body><article class="markdown-body"><h1 id="mobile-debug-tool"><a name="user-content-mobile-debug-tool" href="#mobile-debug-tool" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>mobile debug tool</h1>
-<p>手机上的web版console</p>
-<p>重载了浏览器自带的console.log方法，方便在手机上实时查看调试信息</p>
+</style><title>readme</title></head><body><article class="markdown-body"><h1 id="mobile-web-console-debug-tool"><a name="user-content-mobile-web-console-debug-tool" href="#mobile-web-console-debug-tool" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>mobile web console debug tool</h1>
+<p>移动设备上的web版console调试工具</p>
+<p>重载了浏览器自带的console.log方法，方便在手机上实时查看调试信息。不依赖于任何类库，自动加载样式文件。</p>
 <h3 id="_1"><a name="user-content-_1" href="#_1" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>使用方法</h3>
-<p>在页面中引入mob-debug.js，在想要输出调试信息的地方调用console.log()即可<br />
-启动：MobDebug.start();</p>
+<p>项目中引入mob-debug.js，在需要调试的源码中使用<code>console.log()</code>或者<code>console.error()</code>，或者使用工具自带的输入框输入你的命令</p>
+<p>启动工具：<br />
+<code>&lt;script&gt;</code>MobDebug.start();<br />
+`</script></p>
 <h3 id="todo"><a name="user-content-todo" href="#todo" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>TODO</h3>
 <blockquote>
-<p>console.error<br />
-console.warn<br />
-console.info<br />
-执行命令</p>
+<p>console.error</p>
+<p>console.warn</p>
+<p>console.info</p>
+<p>执行命令</p>
 </blockquote></article></body></html>
