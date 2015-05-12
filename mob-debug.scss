@@ -38,11 +38,11 @@ input,button{-webkit-appearance: none;}
 	bottom:0;
 	padding:0 0 36px;
 	width:100%;
-	max-height:100%;
+	max-height:50%;
 	background:#fff;
 	border-top:1px solid #A3A3A3;
 	z-index: 1;
-	overflow:auto;
+	overflow-y:scroll;
 	-webkit-overflow-scrolling:touch;
 	.info{
 		line-height:1.6em;

@@ -8,7 +8,7 @@
 ;(function(window,document){
 	var MobDebug={};
 
-	MobDebug.version="1.0.0";
+	MobDebug.version="1.0.1";
 
 	MobDebug.cssUrl="mob-debug.css";
 	
@@ -22,35 +22,6 @@
 		str=str.substring(str.indexOf("/*")+2,str.indexOf("*/"));
 		return str;
 	}
-
-	//override console
-	console.log = (function() {
-    	var log = console.log;
-
-	    return function(exception) {
-	        if (typeof exception.stack !== 'undefined') {
-	            log.call(console, exception.stack);
-	        } else {
-	            log.apply(console, arguments);
-	        }
-
-	        MobDebug._console("log",Array.prototype.slice.call(arguments));
-	    }
-	})();
-
-	console.error = (function() {
-    	var error = console.error;
-
-	    return function(exception) {
-	        if (typeof exception.stack !== 'undefined') {
-	            error.call(console, exception.stack);
-	        } else {
-	            error.apply(console, arguments);
-	        }
-
-	        MobDebug._console("error",Array.prototype.slice.call(arguments));
-	    }
-	})();
 
 	//mobdebug template
 	var t=function(){
@@ -125,6 +96,35 @@
 			}
 		},false);
 
+		//override console
+		console.log = (function() {
+	    	var log = console.log;
+
+		    return function(exception) {
+		        if (typeof exception.stack !== 'undefined') {
+		            log.call(console, exception.stack);
+		        } else {
+		            log.apply(console, arguments);
+		        }
+
+		        MobDebug._console("log",Array.prototype.slice.call(arguments));
+		    }
+		})();
+
+		console.error = (function() {
+	    	var error = console.error;
+
+		    return function(exception) {
+		        if (typeof exception.stack !== 'undefined') {
+		            error.call(console, exception.stack);
+		        } else {
+		            error.apply(console, arguments);
+		        }
+
+		        MobDebug._console("error",Array.prototype.slice.call(arguments));
+		    }
+		})();
+
 		MobDebug._console=function(type,logsArr){
 			var fragment=document.createDocumentFragment();
 
@@ -139,6 +139,7 @@
 			});
 
 			$debugConsole.insertBefore(fragment,$ip_command);
+			$debugConsole.scrollTop=$debugConsole.scrollHeight;
 		}
 
 		MobDebug.eval=function(command){
@@ -162,7 +163,6 @@
 	        if(error) console.error(text)
 		}
 	};
-
 
 	//simple selector
 	function S(selector,parentsNode){
@@ -200,6 +200,8 @@
 			case "[object array]":
 			case "[object number]":
 			case "[object boolean]":
+			case "[object touchlist]":
+			case "[object touch]":
 			case "[object object]":return JSON.stringify(obj);break;
 		}
 	}
