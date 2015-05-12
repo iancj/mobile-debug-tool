@@ -9,8 +9,6 @@
 	<title>Demo - mobile web console debug tool</title>
 </head>
 <body>
-	<button id="test">test</button>
-
 	<script src="mob-debug.js"></script>
 	<script>
 	MobDebug.start();
@@ -22,10 +20,6 @@
 	}
 	var arr=[1,2,3]
 	var num=1;
-
-	document.querySelector("#test").addEventListener("touchstart",function(){
-		console.log("asd")
-	},false)
 
 	console.error(str);
 	console.log(obj)
